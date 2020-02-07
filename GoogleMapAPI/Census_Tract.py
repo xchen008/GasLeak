@@ -15,15 +15,15 @@ def getCensusTract(longitude, latitude, retryRun=0):  # returns an array [Census
         longitude, latitude)
     if retryRun == 11:  # Failed to get json data 11 times with this longitude and latitude so need to skip this one
         print("failed 11 times")
-        return [str(0), str(0), str(0)]
+        return [str(0), str(0)]
     try:
         response = requests.get(url)
         dataJSON = response.json()
         data = dataJSON["result"]
         track = data["geographies"]["Census Tracts"][0]["BASENAME"]
-        block = data["geographies"]["Census Blocks"][0]["BLOCK"]
-        county = data["geographies"]["Counties"][0]["NAME"]
-        return [str(track), str(block), str(county)]
+        geoid = data["geographies"]["Census Tracts"][0]["GEOID"]
+        #county = data["geographies"]["Counties"][0]["NAME"]
+        return [str(track), str(geoid)]
     except:
         retryRun += 1
         print("******** Error on longitude, latitude: " + str(longitude) + "," + str(
@@ -35,11 +35,16 @@ def getCensusTract(longitude, latitude, retryRun=0):  # returns an array [Census
 
 df = pd.read_csv(csvfile)  # read the csv file and store to df
 df['CensusTract2010'] = None
+df['Geoid2010'] = None
 
-for row in range(0, len(df)):
+for row in range(0, 11000):
     # b) using the lat and long coords of each entry to find the census data and adding to the respective arrays to add to csv col later
     returnArray = getCensusTract(float(df.loc[row]["lon"].item()),
                                  float(df.loc[row]["lat"].item()))  # data.iat[i,4] = lat   # data.iat[i,5] = lon
     df.iat[row, 9] = returnArray[0]
+    df.iat[row,10] = returnArray[1]
+    if row % 100 == 0:
+        print(row)
 
-df.to_csv(csvfile, encoding='utf-8',index=False)
+print(df)
+df.to_csv("Out.csv", encoding='utf-8',index=False)
