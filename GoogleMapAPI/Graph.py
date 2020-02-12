@@ -75,8 +75,6 @@ print(len(us_tract))
 
 
 # %%
-
-for row in range(0,len(us_tract)):
-    print(us_tract['Geoid'][row])
-
+print(list(join))
+print(join.bcode)
 # %%
