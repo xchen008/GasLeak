@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 
-infile = "FDNY2018.csv"
-outfile = "Geoid_Count2018.csv"
+infile = "FDNY2017_18.csv"
+outfile = "Geoid_Count2017_18.csv"
 
 data = pd.read_csv(infile)
 
@@ -13,7 +13,7 @@ count = np.array([0,0])                                           # keep track o
 
 for row in range(0,len(data)):
     # creating a string with all the details we need
-    detail = data.iat[row,0][5:7] + '/' + data.iat[row,0][0:4] + 'CT' + str(data.iat[row,10])
+    detail = data.iat[row,0][5:7] + '/' + data.iat[row,0][0:4] + 'CT' + str(data.at[row,'Geoid2010'])
     #detail = data.iat[row,0][5:7] + '/' + data.iat[row,0][8:10] + '/' + data.iat[row,0][0:4] + 'T' + data.iat[row,0][11:13] + 'CT' + str(data.iat[row,6])
     
     if detail in info:                          # if the string already exist, we will just increment the count
